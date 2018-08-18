@@ -9,6 +9,7 @@ It helps writing the frontend templates,
 import datetime
 
 import simplejson
+import sys
 from bson import json_util
 from flask import Blueprint
 
@@ -18,12 +19,17 @@ filters = Blueprint("filters", __name__)
 @filters.app_template_filter("format_datetime")
 def format_datetime(value):
     """Format datetime according to server's locale."""
-    return value.strftime('%X %x')
+    if value is None:
+        return "None"
+    else:
+        return value.strftime('%X %x')
 
 
 @filters.app_template_filter("timediff")
 def timediff(time):
     """Return the difference in seconds between now and the given time."""
+    if time is None:
+        return sys.maxsize
     now = datetime.datetime.utcnow()
     diff = now - time
     diff_sec = diff.total_seconds()
